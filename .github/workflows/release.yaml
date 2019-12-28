@@ -30,6 +30,21 @@ jobs:
           helm repo add stable https://kubernetes-charts.storage.googleapis.com/
           helm repo add elastic https://helm.elastic.co
 
+      - name: Create kind cluster
+        uses: helm/kind-action@master
+        with:
+          installLocalPathProvisioner: true
+
+      - name: Run chart-testing (lint)
+        uses: helm/chart-testing-action@master
+        with:
+          command: lint
+
+      - name: Run chart-testing (install)
+        uses: helm/chart-testing-action@master
+        with:
+          command: install
+
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.0.0-alpha.2
         env:
