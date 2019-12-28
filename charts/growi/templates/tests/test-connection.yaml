@@ -3,7 +3,7 @@ kind: Pod
 metadata:
   name: "{{ include "growi.fullname" . }}-test-connection"
   labels:
-{{ include "growi.labels" . | indent 4 }}
+    {{- include "growi.labels" . | nindent 4 }}
   annotations:
     "helm.sh/hook": test-success
 spec:

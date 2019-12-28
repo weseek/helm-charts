@@ -1,0 +1,21 @@
+{{- if and (eq .Values.fileUpload.type "local") (not .Values.fileUpload.existingClaim) -}}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ template "growi.fullname" . }}
+  labels:
+    {{- include "growi.labels" . | nindent 4 }}
+  annotations:
+  {{- if .Values.fileUpload.local.annotations }}
+    {{- toYaml .Values.fileUpload.local.annotations | nindent 4 }}
+  {{- end }}
+spec:
+  accessModes:
+    {{- toYaml .Values.fileUpload.local.accessModes | nindent 4 }}
+  resources:
+    requests:
+      storage: {{ .Values.fileUpload.local.size | default "5Gi" | quote }}
+  {{- with .Values.fileUpload.local.storageClass }}
+  storageClassName: {{ . | quote }}
+  {{- end }}
+{{- end }}

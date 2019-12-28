@@ -5,7 +5,7 @@ kind: Ingress
 metadata:
   name: {{ $fullName }}
   labels:
-{{ include "growi.labels" . | indent 4 }}
+    {{- include "growi.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
