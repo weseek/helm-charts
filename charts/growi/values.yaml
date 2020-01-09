@@ -70,11 +70,15 @@ tolerations: []
 affinity: {}
 
 mongodb:
+  enabled: true
+  # url: mongodb://my-mongodb.chart-example.local:27017/my-wiki
   image:
     tag: 3.6.16-r20
   usePassword: false
 
 elasticsearch:
+  enabled: true
+  # url: http://my-elasticsearch.chart-example.local:9200/my-wiki
   image: extendwings/growi-elasticsearch
   imageTag: latest
   esMajorVersion: 6

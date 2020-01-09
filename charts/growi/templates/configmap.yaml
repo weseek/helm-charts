@@ -3,8 +3,16 @@ kind: ConfigMap
 metadata:
   name: {{ template "growi.fullname" . }}
 data:
+  {{- if .Values.mongodb.enabled }}
   MONGO_URI: {{ printf "mongodb://%s-mongodb:27017/%s" .Release.Name (include "growi.name" .) }}
+  {{- else }}
+  MONGO_URI: {{ .Values.mongodb.uri }}
+  {{- end }}
+  {{- if .Values.elasticsearch.enabled }}
   ELASTICSEARCH_URI: {{ printf "http://elasticsearch-master:9200/%s" (include "growi.name" .) }}
+  {{- else }}
+  ELASTICSEARCH_URI: {{ .Values.elasticsearch.uri }}
+  {{- end }}
   FILE_UPLOAD: {{ .Values.fileUpload.type | default "local" }}
   {{- if ge (len .Values.ingress.hosts) 1 }}
   APP_SITE_URL: {{ printf "https://%s" (index .Values.ingress.hosts 0).host }}
