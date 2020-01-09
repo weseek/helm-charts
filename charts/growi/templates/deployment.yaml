@@ -62,14 +62,14 @@ spec:
           - name: APP_SITE_URL
             value: {{ printf "https://%s" (index .Values.ingress.hosts 0).host }}
           {{- end }}
-        {{- if and (.Values.fileUpload.type) (eq .Values.fileUpload.type "local") }}
+        {{- if eq .Values.fileUpload.type "local" }}
           volumeMounts:
           - name: uploads
             mountPath: "/opt/growi/public/uploads"
         {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-      {{- if and (.Values.fileUpload.type) (eq .Values.fileUpload.type "local") }}
+      {{- if eq .Values.fileUpload.type "local" }}
       volumes:
         - name: uploads
           persistentVolumeClaim:
