@@ -7,9 +7,11 @@ $ helm install growi-example weseek/growi
 ```
 
 ## Prerequisites
-* Helm 3.0+
-   * Helm 2 is not tested
-* Kubernetes 1.13+
+* Helm 2 or 3
+   * Tested with 2.16.1 and 3.0.2.
+* Supported version of Kubernetes
+   * Tested with 1.16.4 and 1.17.0.
+   * See [official document](https://github.com/kubernetes/sig-release/blob/master/releases/patch-releases.md) for current versions. The chart may work on older versions, but it is discouraged.
 
 ## Parameters
 
@@ -37,5 +39,4 @@ $ helm install growi-example weseek/growi
 | `elasticsearch`    | Parameters for Elasticsearch subchart. See [Helm Hub](https://hub.helm.sh/charts/elastic/elasticsearch) for details.                                                                                                        | `image: extendwings/growi-elasticsearch`<br> `imageTag: latest`<br> `esMajorVersion: 6`              |
 | `nameOverride`     | String to partially override growi.fullname template with a string (will prepend the release name)                                                                                                                          | `""`                                                                                                 |
 | `fullnameOverride` | String to fully override growi.fullname template with a string                                                                                                                                                              | `""`                                                                                                 |
-
 
