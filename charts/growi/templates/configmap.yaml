@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "growi.fullname" . }}
+data:
+  MONGO_URI: {{ printf "mongodb://%s-mongodb:27017/%s" .Release.Name (include "growi.name" .) }}
+  ELASTICSEARCH_URI: {{ printf "http://elasticsearch-master:9200/%s" (include "growi.name" .) }}
+  FILE_UPLOAD: {{ .Values.fileUpload.type | default "local" }}
+  {{- if ge (len .Values.ingress.hosts) 1 }}
+  APP_SITE_URL: {{ printf "https://%s" (index .Values.ingress.hosts 0).host }}
+  {{- end }}
+  {{- with .Values.extraEnv }}
+    {{- toYaml . | nindent 2 }}
+  {{- end }}

@@ -39,8 +39,7 @@ fileUpload:
 # passwordSeed: ChangeThisValueToYours
 
 extraEnv:
-# - name: MATHJAX
-#   value: "1"
+# - MATHJAX: "1"
 
 strategy: {}
   # type: RollingUpdate
