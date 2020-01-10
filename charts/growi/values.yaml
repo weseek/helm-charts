@@ -73,7 +73,7 @@ mongodb:
   enabled: true
   # url: mongodb://my-mongodb.chart-example.local:27017/my-wiki
   image:
-    tag: 3.6.16-r20
+    tag: 3.6.16-r29
   usePassword: false
 
 elasticsearch:
