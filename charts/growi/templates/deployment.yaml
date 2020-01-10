@@ -51,17 +51,15 @@ spec:
             value: {{ printf "mongodb://%s-mongodb:27017/%s" .Release.Name (include "growi.name" .) }}
           - name: ELASTICSEARCH_URI
             value: {{ printf "http://elasticsearch-master:9200/%s" (include "growi.name" .) }}
-          - name: PASSWORD_SEED
-            valueFrom:
-              secretKeyRef:
-                name: {{ template "growi.fullname" . }}
-                key: passwordSeed
           - name: FILE_UPLOAD
             value: {{ .Values.fileUpload.type | default "local" }}
           {{- if ge (len .Values.ingress.hosts) 1 }}
           - name: APP_SITE_URL
             value: {{ printf "https://%s" (index .Values.ingress.hosts 0).host }}
           {{- end }}
+          envFrom:
+          - secretRef:
+              name: {{ template "growi.fullname" . }}
         {{- if eq .Values.fileUpload.type "local" }}
           volumeMounts:
           - name: uploads
