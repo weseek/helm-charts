@@ -37,7 +37,7 @@ spec:
             protocol: TCP
           livenessProbe:
             httpGet:
-              path: /_api/v3/healthcheck
+              path: /_api/v3/healthcheck?connectToMiddlewares
               port: http
             initialDelaySeconds: 10
           readinessProbe:
