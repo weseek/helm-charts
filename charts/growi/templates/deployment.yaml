@@ -3,50 +3,75 @@ kind: Deployment
 metadata:
   name: {{ include "growi.fullname" . }}
   labels:
-{{ include "growi.labels" . | indent 4 }}
+    {{- include "growi.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "growi.name" . }}
-      app.kubernetes.io/instance: {{ .Release.Name }}
+      {{- include "growi.labels" . | nindent 6 }}
+  {{- with .Values.strategy }}
+  strategy:
+    {{- . | toYaml | nindent 4 }}
+  {{- end }}
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: {{ include "growi.name" . }}
-        app.kubernetes.io/instance: {{ .Release.Name }}
-    spec:
-    {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
+        {{- include "growi.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
-    {{- end }}
+        {{- end }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+        {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - name: http
-              containerPort: 80
-              protocol: TCP
+          - name: http
+            containerPort: 3000
+            protocol: TCP
           livenessProbe:
             httpGet:
-              path: /
+              path: /_api/v3/healthcheck?connectToMiddlewares
               port: http
+            initialDelaySeconds: 10
           readinessProbe:
             httpGet:
-              path: /
+              path: /_api/v3/healthcheck?connectToMiddlewares
               port: http
+            initialDelaySeconds: 10
+          envFrom:
+          - configMapRef:
+              name: {{ template "growi.fullname" . }}
+          - secretRef:
+              name: {{ template "growi.fullname" . }}
+        {{- if eq .Values.fileUpload.type "local" }}
+          volumeMounts:
+          - name: uploads
+            mountPath: "/opt/growi/public/uploads"
+        {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+      {{- if eq .Values.fileUpload.type "local" }}
+      volumes:
+        - name: uploads
+          persistentVolumeClaim:
+            claimName: {{ .Values.fileUpload.existingClaim | default (include "growi.fullname" .) }}
+      {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-    {{- with .Values.affinity }}
+      {{- with .Values.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
-    {{- end }}
-    {{- with .Values.tolerations }}
+      {{- end }}
+      {{- with .Values.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
-    {{- end }}
+      {{- end }}

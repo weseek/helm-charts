@@ -5,13 +5,9 @@
 replicaCount: 1
 
 image:
-  repository: nginx
-  tag: stable
+  repository: weseek/growi
+  tag: 3.6.3
   pullPolicy: IfNotPresent
-
-imagePullSecrets: []
-nameOverride: ""
-fullnameOverride: ""
 
 service:
   type: ClusterIP
@@ -31,6 +27,26 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
+fileUpload:
+  type: local
+  local:
+    annotations: {}
+    accessModes:
+    - ReadWriteOnce
+    # size: 5Gi
+    # storageClass: default
+
+# passwordSeed: ChangeThisValueToYours
+
+extraEnv:
+# - MATHJAX: "1"
+
+strategy: {}
+  # type: RollingUpdate
+  # rollingUpdate:
+  # maxSurge: 0
+  # maxUnavailable: 1
+
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
@@ -43,8 +59,26 @@ resources: {}
   #   cpu: 100m
   #   memory: 128Mi
 
+podAnnotations: {}
+
+podLabels: {}
+
 nodeSelector: {}
 
 tolerations: []
 
 affinity: {}
+
+mongodb:
+  enabled: true
+  # url: mongodb://my-mongodb.chart-example.local:27017/my-wiki
+  image:
+    tag: 3.6.16-r29
+  usePassword: false
+
+elasticsearch:
+  enabled: true
+  # url: http://my-elasticsearch.chart-example.local:9200/my-wiki
+  image: extendwings/growi-elasticsearch
+  imageTag: latest
+  esMajorVersion: 6
