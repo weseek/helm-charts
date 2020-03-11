@@ -6,9 +6,9 @@ name: Release Charts
 #       - master
 on: [push]
 env:
-  - SRC_CHART_PATH: charts/growi
-  - PUBLISH_BRANCH: gh-pages
-  - HELM_VERSION: 3.1.0
+  SRC_CHART_PATH: charts/growi
+  PUBLISH_BRANCH: gh-pages
+  HELM_VERSION: 3.1.0
 
 jobs:
   lint:
@@ -35,7 +35,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       
-      - name: Package
+      - name: Publish chart
         uses: stefanprodan/kube-tools@v1
         with:
           helm: 2.16.3
@@ -52,7 +52,7 @@ jobs:
             git config user.email ${GITHUB_ACTOR}@users.noreply.github.com
             git checkout ${PUBLISH_BRANCH}
             mv ${PKG_DIR}/*.tgz .
-            helm repo index . --url ${URL}
+            helm repo index .
             git add .
             git commit -m "Publish Helm chart at ${SRC_CHART_PATH} as ${PKG_NAME}"
             git push origin ${PUBLISH_BRANCH}
