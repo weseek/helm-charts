@@ -41,18 +41,11 @@ jobs:
           helm: 2.16.3
           helmv3: ${{ env.HELM_VERSION }}
           command: |
-            # initialize helm and chart dependency
             helm init --client-only
             helm dependency update ${SRC_CHART_PATH}
-            
-            # Package chart
-            PKG_DIR="${HOME}/pkg"
-            mkdir ${PKG_DIR}
             helm package ${SRC_CHART_PATH}
-            
-            # Add files to git
             helm repo index .
-            
+
       - name: Publish Helm chart to target branch
         run: |
           GIT_REPOSITORY_URL="https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
