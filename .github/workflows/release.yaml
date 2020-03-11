@@ -30,7 +30,7 @@ jobs:
       - name: Run chart-testing (install)
         uses: helm/chart-testing-action@v1.0.0-alpha.3
         with:
-          install
+          command: install
 
   # release:
   #   runs-on: ubuntu-18.04
