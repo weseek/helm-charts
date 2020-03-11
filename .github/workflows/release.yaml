@@ -47,9 +47,11 @@ jobs:
             
             # Package chart
             PKG_DIR="${HOME}/pkg"
-            echo ::set-env name=PKG_DIR::${PKG_DIR}
             mkdir ${PKG_DIR}
             helm package ${SRC_CHART_PATH} --destination ${PKG_DIR}
+            
+            # Set environments for steps forward
+            echo ::set-env name=PKG_DIR::${PKG_DIR}
             echo ::set-env name=PKG_NAME::$(basename $(ls ${PKG_DIR}/*.tgz))
 
       - name: Publish Helm chart to target branch
@@ -57,9 +59,9 @@ jobs:
           GIT_REPOSITORY_URL="https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           git config user.name ${GITHUB_ACTOR}
           git config user.email ${GITHUB_ACTOR}@users.noreply.github.com
-          git remote set-url origin ${GIT_REPOSITORY_URL}
-          git fetch origin
-          git checkout ${PUBLISH_BRANCH}
+          # git remote set-url origin ${GIT_REPOSITORY_URL}
+          # git fetch origin
+          # git checkout ${PUBLISH_BRANCH}
           mv ${PKG_DIR}/*.tgz .
           helm repo index .
           git add .
