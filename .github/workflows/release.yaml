@@ -50,7 +50,12 @@ jobs:
             mkdir ${PKG_DIR}
             helm package ${SRC_CHART_PATH} --destination ${PKG_DIR}
             
-            # Set environments for steps forward
+            # Add files to git
+            mv ${PKG_DIR}/*.tgz .
+            helm repo index .
+            git add .
+
+            # Set environments for forward steps
             echo ::set-env name=PKG_DIR::${PKG_DIR}
             echo ::set-env name=PKG_NAME::$(basename $(ls ${PKG_DIR}/*.tgz))
 
@@ -62,8 +67,4 @@ jobs:
           # git remote set-url origin ${GIT_REPOSITORY_URL}
           # git fetch origin
           # git checkout ${PUBLISH_BRANCH}
-          mv ${PKG_DIR}/*.tgz .
-          helm repo index .
-          git add .
-          git commit -m "Publish Helm chart at ${SRC_CHART_PATH} as ${PKG_NAME}"
           git push origin ${PUBLISH_BRANCH}
