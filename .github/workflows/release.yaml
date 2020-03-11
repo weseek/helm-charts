@@ -22,7 +22,7 @@ jobs:
         uses: stefanprodan/kube-tools@v1
         with:
           helm: 2.16.3
-          helmv3: {{ env.HELM_VERSION }}
+          helmv3: ${{ env.HELM_VERSION }}
           command: |
             helm init --client-only
             helm lint ${SRC_CHART_PATH}
@@ -39,7 +39,7 @@ jobs:
         uses: stefanprodan/kube-tools@v1
         with:
           helm: 2.16.3
-          helmv3: {{ env.HELM_VERSION }}
+          helmv3: ${{ env.HELM_VERSION }}
           command: |
             # Package chart
             PKG_DIR=/github/home/pkg
