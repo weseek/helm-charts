@@ -1,0 +1,54 @@
+name: Release Charts
+
+# on:
+#   push:
+#     branches:
+#       - master
+on: [push]
+
+jobs:
+  lint_and_test_install:
+    runs-on: ubuntu-18.04
+
+    steps:
+      - name Checkout
+        uses: actions/checkout@v2
+
+      - name: Run chart-testing (lint)
+        id: lint
+        uses: helm/chart-testing-action@v1.0.0-alpha.3
+        with:
+          command: lint
+
+      - name: Create kind cluster
+        # Only build a kind cluster if there are chart changes to test.
+        if: steps.lint.outputs.changed == 'true'
+        uses: helm/kind-action@v1.0.0-alpha.3
+        with:
+          install_local_path_provisioner: true
+
+      - name: Run chart-testing (install)
+        uses: helm/chart-testing-action@v1.0.0-alpha.3
+        with:
+          install
+
+  # release:
+  #   runs-on: ubuntu-18.04
+  #   needs: lint_and_test_install
+
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
+
+  #     # See https://github.com/helm/chart-releaser-action/issues/6
+  #     - name: Install Helm
+  #       run: |
+  #         curl -sSLo get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get
+  #         chmod 700 get_helm.sh
+  #         ./get_helm.sh
+  #         helm init --client-only
+
+  #     - name: Add dependency chart repos
+  #       run: |
+  #         helm repo add stable https://kubernetes-charts.storage.googleapis.com/
+  #         helm repo add elastic https://helm.elastic.co
