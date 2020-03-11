@@ -46,10 +46,11 @@ jobs:
             helm dependency update ${SRC_CHART_PATH}
             
             # Package chart
-            echo ::set-env name=PKG_DIR::"${HOME}/pkg"
+            PKG_DIR="${HOME}/pkg"
+            echo ::set-env name=PKG_DIR::${PKG_DIR}"
             mkdir ${PKG_DIR}
             helm package ${SRC_CHART_PATH} --destination ${PKG_DIR}
-            PKG_NAME=$(basename $(ls ${PKG_DIR}/*.tgz))
+            echo ::set-env name=PKG_NAME::$(basename $(ls ${PKG_DIR}/*.tgz))
 
       - name: Publish Helm chart to target branch
         run:
