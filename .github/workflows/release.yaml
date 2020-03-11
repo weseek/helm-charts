@@ -52,7 +52,7 @@ jobs:
             PKG_NAME=$(basename $(ls ${PKG_DIR}/*.tgz))
             
             # Publish Helm chart to target branch
-            GIT_REPOSITORY_URL="https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+            # GIT_REPOSITORY_URL="https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
             git config user.name ${GITHUB_ACTOR}
             git config user.email ${GITHUB_ACTOR}@users.noreply.github.com
             # git remote set-url origin ${GIT_REPOSITORY_URL}
@@ -62,5 +62,5 @@ jobs:
             helm repo index .
             git add .
             git commit -m "Publish Helm chart at ${SRC_CHART_PATH} as ${PKG_NAME}"
-            # git push origin ${PUBLISH_BRANCH}
-            git push -f --set-upstream origin ${PUBLISH_BRANCH}
+            git push origin ${PUBLISH_BRANCH}
+            # git push origin -u ${PUBLISH_BRANCH}
