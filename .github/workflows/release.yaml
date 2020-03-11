@@ -55,6 +55,7 @@ jobs:
             git config user.name ${GITHUB_ACTOR}
             git config user.email ${GITHUB_ACTOR}@users.noreply.github.com
             git remote set-url origin ${GITHUB_REPOSITORY}
+            git fetch origin
             git checkout ${PUBLISH_BRANCH}
             mv ${PKG_DIR}/*.tgz .
             helm repo index .
