@@ -1,10 +1,9 @@
 name: Release Charts
 
-# on:
-#   push:
-#     branches:
-#       - master
-on: [push]
+on:
+  push:
+    branches:
+      - master
 env:
   SRC_CHART_PATH: charts/growi
   PUBLISH_BRANCH: gh-pages
@@ -46,13 +45,8 @@ jobs:
 
       - name: Publish Helm chart to target branch
         run: |
-          git status
-          GIT_REPOSITORY_URL="https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           git config user.name ${GITHUB_ACTOR}
           git config user.email ${GITHUB_ACTOR}@users.noreply.github.com
-          git remote set-url origin ${GIT_REPOSITORY_URL}
-          git fetch origin
-          # git checkout ${PUBLISH_BRANCH}
           git add .
           git commit -m "Publish Helm chart at ${SRC_CHART_PATH}"
           git push origin HEAD:${PUBLISH_BRANCH}
