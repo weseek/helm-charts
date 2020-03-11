@@ -56,4 +56,4 @@ jobs:
           # git checkout ${PUBLISH_BRANCH}
           git add .
           git commit -m "Publish Helm chart at ${SRC_CHART_PATH}"
-          git push origin ${PUBLISH_BRANCH}
+          git push origin -u ${PUBLISH_BRANCH}
