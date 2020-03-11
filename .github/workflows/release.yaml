@@ -44,6 +44,7 @@ jobs:
             # Package chart
             PKG_DIR=/github/home/pkg
             mkdir ${PKG_DIR}
+            helm dependency update ${SRC_CHART_PATH}
             helm package ${SRC_CHART_PATH} --destination ${PKG_DIR}
             PKG_NAME=$(basename $(ls ${PKG_DIR}/*.tgz))
             
