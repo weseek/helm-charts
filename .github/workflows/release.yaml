@@ -47,6 +47,8 @@ jobs:
       - name: Publish Helm chart to target branch
         run: |
           GIT_REPOSITORY_URL="https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git branch
+          git remote -v
           git config user.name ${GITHUB_ACTOR}
           git config user.email ${GITHUB_ACTOR}@users.noreply.github.com
           git remote set-url upstream ${GIT_REPOSITORY_URL}
