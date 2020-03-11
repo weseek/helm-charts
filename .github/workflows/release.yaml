@@ -53,7 +53,7 @@ jobs:
             echo ::set-env name=PKG_NAME::$(basename $(ls ${PKG_DIR}/*.tgz))
 
       - name: Publish Helm chart to target branch
-        run:
+        run: |
           GIT_REPOSITORY_URL="https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           git config user.name ${GITHUB_ACTOR}
           git config user.email ${GITHUB_ACTOR}@users.noreply.github.com
