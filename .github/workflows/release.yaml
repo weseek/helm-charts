@@ -41,10 +41,13 @@ jobs:
           helm: 2.16.3
           helmv3: ${{ env.HELM_VERSION }}
           command: |
-            # Package chart
-            PKG_DIR=/github/home/pkg
-            mkdir ${PKG_DIR}
+            # initialize helm and chart dependency
+            helm init --client-only
             helm dependency update ${SRC_CHART_PATH}
+            
+            # Package chart
+            PKG_DIR="${HOME}/pkg"
+            mkdir ${PKG_DIR}
             helm package ${SRC_CHART_PATH} --destination ${PKG_DIR}
             PKG_NAME=$(basename $(ls ${PKG_DIR}/*.tgz))
             
