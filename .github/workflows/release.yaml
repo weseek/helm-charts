@@ -5,50 +5,54 @@ name: Release Charts
 #     branches:
 #       - master
 on: [push]
+env:
+  - SRC_CHART_PATH: charts/growi
+  - PUBLISH_BRANCH: gh-pages
+  - HELM_VERSION: 3.1.0
 
 jobs:
-  lint_and_test_install:
+  lint:
     runs-on: ubuntu-18.04
 
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Run chart-testing (lint)
-        id: lint
-        uses: helm/chart-testing-action@v1.0.0-alpha.3
+      - name: Run chart testing (lint)
+        uses: stefanprodan/kube-tools@v1
         with:
-          command: lint
+          helm: 2.16.3
+          helmv3: {{ env.HELM_VERSION }}
+          command: |
+            helm init --client-only
+            helm lint ${SRC_CHART_PATH}
 
-      - name: Create kind cluster
-        # Only build a kind cluster if there are chart changes to test.
-        if: steps.lint.outputs.changed == 'true'
-        uses: helm/kind-action@v1.0.0-alpha.3
+  release:
+    runs-on: ubuntu-18.04
+    needs: lint
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      
+      - name: Package
+        uses: stefanprodan/kube-tools@v1
         with:
-          install_local_path_provisioner: true
-
-      - name: Run chart-testing (install)
-        uses: helm/chart-testing-action@v1.0.0-alpha.3
-        with:
-          command: install
-
-  # release:
-  #   runs-on: ubuntu-18.04
-  #   needs: lint_and_test_install
-
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v2
-
-  #     # See https://github.com/helm/chart-releaser-action/issues/6
-  #     - name: Install Helm
-  #       run: |
-  #         curl -sSLo get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get
-  #         chmod 700 get_helm.sh
-  #         ./get_helm.sh
-  #         helm init --client-only
-
-  #     - name: Add dependency chart repos
-  #       run: |
-  #         helm repo add stable https://kubernetes-charts.storage.googleapis.com/
-  #         helm repo add elastic https://helm.elastic.co
+          helm: 2.16.3
+          helmv3: {{ env.HELM_VERSION }}
+          command: |
+            # Package chart
+            PKG_DIR=/github/home/pkg
+            mkdir ${PKG_DIR}
+            helm package ${SRC_CHART_PATH} --destination ${PKG_DIR}
+            PKG_NAME=$(basename $(ls ${PKG_DIR}/*.tgz))
+            
+            # Publish Helm chart to target branch
+            git config user.name ${GITHUB_ACTOR}
+            git config user.email ${GITHUB_ACTOR}@users.noreply.github.com
+            git checkout ${PUBLISH_BRANCH}
+            mv ${PKG_DIR}/*.tgz .
+            helm repo index . --url ${URL}
+            git add .
+            git commit -m "Publish Helm chart at ${SRC_CHART_PATH} as ${PKG_NAME}"
+            git push origin ${PUBLISH_BRANCH}
