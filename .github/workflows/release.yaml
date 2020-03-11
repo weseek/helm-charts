@@ -47,7 +47,7 @@ jobs:
             
             # Package chart
             PKG_DIR="${HOME}/pkg"
-            echo ::set-env name=PKG_DIR::${PKG_DIR}"
+            echo ::set-env name=PKG_DIR::${PKG_DIR}
             mkdir ${PKG_DIR}
             helm package ${SRC_CHART_PATH} --destination ${PKG_DIR}
             echo ::set-env name=PKG_NAME::$(basename $(ls ${PKG_DIR}/*.tgz))
