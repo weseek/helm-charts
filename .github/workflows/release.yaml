@@ -1,9 +1,10 @@
 name: Release Charts
 
-on:
-  push:
-    branches:
-      - master
+# on:
+#   push:
+#     branches:
+#       - master
+on: [push]
 env:
   SRC_CHART_PATH: charts/growi
   HELM_VERSION: 3.1.0
