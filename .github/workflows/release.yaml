@@ -1,10 +1,10 @@
 name: Release Charts
 
-# on:
-#   push:
-#     branches:
-#       - master
-on: [push]
+on:
+  push:
+    branches:
+      - master
+# on: [push]
 env:
   SRC_CHART_PATH_BASE: charts
   HELM_VERSION: 3.1.0
@@ -31,6 +31,7 @@ jobs:
 
     steps:
       - name: Checkout
+        # Workaround to use chart releaser (ref. https://github.com/helm/chart-testing-action/issues/20)
         uses: actions/checkout@v1
 
       - name: Configure Git
