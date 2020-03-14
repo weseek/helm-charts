@@ -10,20 +10,20 @@ env:
   HELM_VERSION: 3.1.0
 
 jobs:
-  lint:
-    runs-on: ubuntu-18.04
+  # lint:
+  #   runs-on: ubuntu-18.04
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
 
-      - name: Run chart testing (lint)
-        uses: stefanprodan/kube-tools@v1
-        with:
-          helmv3: ${{ env.HELM_VERSION }}
-          command: |
-            helm init --client-only
-            helm lint ${SRC_CHART_PATH}
+  #     - name: Run chart testing (lint)
+  #       uses: stefanprodan/kube-tools@v1
+  #       with:
+  #         helmv3: ${{ env.HELM_VERSION }}
+  #         command: |
+  #           helm init --client-only
+  #           helm lint ${SRC_CHART_PATH}
 
   release:
     runs-on: ubuntu-18.04
@@ -39,7 +39,7 @@ jobs:
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
       - name: >
-          Release updated charts as GitHub Release
+          Upload updated charts to GitHub Release
           and update index of helm packages in `gh-pages` branch which is published as GitHub Pages
         uses: helm/chart-releaser-action@v1.0.0-alpha.2
         env:
