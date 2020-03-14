@@ -12,11 +12,11 @@ env:
 jobs:
   # lint:
   #   runs-on: ubuntu-18.04
-
+  # 
   #   steps:
   #     - name: Checkout
   #       uses: actions/checkout@v2
-
+  # 
   #     - name: Run chart testing (lint)
   #       uses: stefanprodan/kube-tools@v1
   #       with:
@@ -24,10 +24,10 @@ jobs:
   #         command: |
   #           helm init --client-only
   #           helm lint ${SRC_CHART_PATH}
-
+  # 
   release:
     runs-on: ubuntu-18.04
-    needs: lint
+    # needs: lint
 
     steps:
       - name: Checkout
