@@ -1,0 +1,113 @@
+name: Release Valid Charts
+
+# on:
+#   push:
+#     branches:
+#       - master
+on: [push]
+env:
+  SRC_CHART_PATH_BASE: charts
+  GH_PAGES_BRANCH: gh-pages
+  HELM_VERSION: 2.16.3
+  KIND_VERSION: 0.7.0
+  ENABLE_INSTALL_TEST: true
+
+jobs:
+  lint_and_install:
+    runs-on: ubuntu-18.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      
+      - name: Install helm
+        run: |
+          INSTALL_DIR=$(mktemp -d)
+          curl -sSL https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz | tar xz \
+            && mv linux-amd64/helm "${INSTALL_DIR}"/helm && rm -rf linux-amd64
+          "${INSTALL_DIR}"/helm version --client
+          echo ::add-path::"${INSTALL_DIR}"
+
+      - name: Lint charts
+        run: |
+          helm init --client-only
+          helm lint "${SRC_CHART_PATH_BASE}"/*
+
+      - name: Create k8s cluster with using `kind`
+        run: |
+          if [ -z "${ENABLE_INSTALL_TEST}" ]; then exit 0; fi
+
+          curl -Lo ./kind https://github.com/kubernetes-sigs/kind/releases/download/v${KIND_VERSION}/kind-$(uname)-amd64
+          chmod +x kind
+          # ref. https://kind.sigs.k8s.io/docs/user/configuration/
+          KIND_CONFIG_DIR=$(mktemp -d)
+          cat <<EOY > ${KIND_CONFIG_DIR}/kind-config.yaml
+          kind: Cluster
+          apiVersion: kind.x-k8s.io/v1alpha4
+          nodes:
+          - role: control-plane
+          - role: worker
+          - role: worker
+          - role: worker
+          EOY
+          ./kind create cluster --config ${KIND_CONFIG_DIR}/kind-config.yaml
+
+          # ref. https://github.com/helm/helm/issues/3055#issuecomment-385371327
+          kubectl create serviceaccount --namespace kube-system tiller \
+            && kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller \
+            && helm init --wait --service-account tiller \
+            && kubectl patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"template":{"spec":{"serviceAccount":"tiller"}}}}'
+          helm version --server
+
+      - name: Install charts and run chart's test
+        run: |
+          if [ -z "${ENABLE_INSTALL_TEST}" ]; then exit 0; fi
+
+          pushd "${SRC_CHART_PATH_BASE}"
+          for CHART in $(ls -d *); do
+            (helm install --timeout 600 --debug --dep-up --wait -n ${CHART} ${CHART} \
+              && helm test --debug ${CHART} \
+              && helm delete --purge ${CHART}) \
+              || exit 1
+          done
+          popd
+
+  release:
+    runs-on: ubuntu-18.04
+    needs: lint_and_install
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Configure Git
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+
+      - name: Install helm
+        run: |
+          INSTALL_DIR=$(mktemp -d)
+          curl -sSL https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz | tar xz \
+            && mv linux-amd64/helm "${INSTALL_DIR}"/helm && rm -rf linux-amd64
+          "${INSTALL_DIR}"/helm version --client
+          echo ::add-path::"${INSTALL_DIR}"
+
+      - name: Update helm chart packges in GH_PAGES_BRANCH branch
+        run: |
+          # Initialize working directory
+          GH_PAGES_WORKTREE="$(mktemp -d)"
+          git fetch --no-tags --prune --depth=1 origin +refs/heads/*:refs/remotes/origin/*
+          git worktree add "${GH_PAGES_WORKTREE}" ${GH_PAGES_BRANCH}
+
+          # Create helm packages
+          helm init --client-only
+          helm package "${SRC_CHART_PATH_BASE}"/* --destination "${GH_PAGES_WORKTREE}" --dependency-update --save=false
+
+          # Update helm repo index
+          cd "${GH_PAGES_WORKTREE}"
+          helm repo index .
+          git add .
+          git diff # debug info
+          git commit -m "Update helm packages"
+          git push origin ${GH_PAGES_BRANCH}
