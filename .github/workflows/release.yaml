@@ -1,16 +1,15 @@
 name: Release Valid Charts
 
-# on:
-#   push:
-#     branches:
-#       - master
-on: [push]
+on:
+  push:
+    branches:
+      - master
 env:
   SRC_CHART_PATH_BASE: charts
   GH_PAGES_BRANCH: gh-pages
   HELM_VERSION: 2.16.3
   KIND_VERSION: 0.7.0
-  ENABLE_INSTALL_TEST: true
+  ENABLE_INSTALL_TEST: ""
 
 jobs:
   lint_and_install:
