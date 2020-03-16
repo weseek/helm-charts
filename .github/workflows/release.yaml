@@ -7,7 +7,7 @@ name: Release Valid Charts
 on: [push]
 env:
   SRC_CHART_PATH_BASE: charts
-  ENABLE_INSTALL_TEST: ""
+  ENABLE_INSTALL_TEST: true
 
 jobs:
   lint_and_install:
