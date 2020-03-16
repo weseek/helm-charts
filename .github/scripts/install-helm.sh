@@ -19,7 +19,7 @@ fi
 
 pushd $(mktemp -d)
 curl -sSL https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz | tar xz
-sudo mv linux-amd64/helm "${INSTALL_DIR}"/helm
+mv linux-amd64/helm "${INSTALL_DIR}"/helm
 rm -rf linux-amd64
 popd
 
