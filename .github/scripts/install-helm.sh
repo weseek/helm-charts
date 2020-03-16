@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash -e -x
 
 # ================================================================================
 # Update helm repository that published by GitHub Page
@@ -19,7 +19,7 @@ fi
 
 pushd $(mktemp -d)
 curl -sSL https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz | tar xz
-mv linux-amd64/helm "${INSTALL_DIR}"/helm
+sudo mv linux-amd64/helm "${INSTALL_DIR}"/helm
 rm -rf linux-amd64
 popd
 
