@@ -6,6 +6,7 @@ name: Release Valid Charts
 #       - master
 on: [push]
 env:
+  SRC_CHART_PATH_BASE: charts
   ENABLE_INSTALL_TEST: ""
 
 jobs:
