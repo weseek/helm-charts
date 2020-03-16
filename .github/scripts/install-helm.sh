@@ -1,4 +1,4 @@
-#!/bin/bash -e -x
+#!/bin/bash -e
 
 # ================================================================================
 # Update helm repository that published by GitHub Page
