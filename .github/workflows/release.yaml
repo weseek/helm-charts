@@ -29,7 +29,13 @@ jobs:
       - name: Install charts and run each chart's test
         run: |
           if [ -n "${ENABLE_INSTALL_TEST}" ]; then
-            ${GITHUB_WORKSPACE}/.github/scripts/exec-helm-test.sh --debug
+            KIND_CONFIG_PATH="${GITHUB_WORKSPACE}/.github/scripts/kind-config.yaml"
+            if [ ! -f "$KIND_CONFIG_PATH" ]; then
+              echo "Error: cannot found config. $KIND_CONFIG_PATH" >&2
+              exit 1
+            fi
+
+            ${GITHUB_WORKSPACE}/.github/scripts/exec-helm-test.sh --debug --config ${KIND_CONFIG_PATH}
           fi
 
   release:

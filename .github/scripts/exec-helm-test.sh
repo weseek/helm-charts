@@ -15,10 +15,11 @@ Install helm into tempolary k8s cluster and execute helm test.
 
 Mandatory arguments to long options are mandatory for short options too.
   -h, --help               Display help
-  -d, --debug              Display verbose output
+      --debug              Display verbose output
   -c, --chart=DIRPATH      Base path where charts are (default: "charts")
-  -k, --kindver=VERSION    "kind" version (default: "0.7.0")
+      --kindver=VERSION    "kind" version (default: "0.7.0")
   -t, --timeout=SECONDS    Timeout of "helm install" command (default: "600")
+  -f, --config=CONFPATH    Config file path
 EOF
 
   exit 1
@@ -33,13 +34,14 @@ main() {
   local chartdir=charts
   local kindver=0.7.0
   local timeout=600
+  local config=
 
   while :; do
     case "${1:-}" in
       -h|--help)
         show_help_with_exit
         ;;
-      -d|--debug)
+      --debug)
         debug=true
         ;;
       -c|--chartdir)
@@ -51,7 +53,7 @@ main() {
           show_help_with_exit
         fi
         ;;
-      -k|--kindver)
+      --kindver)
         if [[ -n "${2:-}" ]]; then
           kindver="$2"
           shift
@@ -69,6 +71,15 @@ main() {
           show_help_with_exit
         fi
         ;;
+      -f|--config)
+        if [[ -n "${2:-}" ]]; then
+          config="--config $2"
+          shift
+        else
+          echo "ERROR: '--config' cannot be empty." >&2
+          show_help_with_exit
+        fi
+        ;;
       *)
         break
         ;;
@@ -81,19 +92,12 @@ main() {
   # Create k8s cluster using `kind` to test installation ability
   # --------------------------------------------------------------------------------
 
-  SCRIPT_DIR=$(dirname -- "$(readlink -f "${BASH_SOURCE[0]}" || realpath "${BASH_SOURCE[0]}")")
-  KIND_CONFIG_PATH="${SCRIPT_DIR}/kind-config.yaml"
-  if [ ! -f "$KIND_CONFIG_PATH" ]; then
-    echo "exec-helm-test.sh error: cannot found config. $KIND_CONFIG_PATH" >&2
-    exit 1
-  fi
-
   pushd $(mktemp -d)
 
   # Install `kind`
   curl -Lo ./kind https://github.com/kubernetes-sigs/kind/releases/download/v${kindver}/kind-$(uname)-amd64
   chmod +x kind
-  ./kind create cluster --config "${KIND_CONFIG_PATH}"
+  ./kind create cluster "${config}"
 
   # Initialize helm with tiller
   kubectl create serviceaccount --namespace kube-system tiller
