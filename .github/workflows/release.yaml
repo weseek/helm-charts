@@ -35,7 +35,7 @@ jobs:
               exit 1
             fi
 
-            ${GITHUB_WORKSPACE}/.github/scripts/exec-helm-test.sh --debug --config ${KIND_CONFIG_PATH}
+            ${GITHUB_WORKSPACE}/misc/exec-helm-test.sh --debug --config ${KIND_CONFIG_PATH}
           fi
 
   release:
