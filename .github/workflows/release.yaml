@@ -29,7 +29,7 @@ jobs:
       - name: Install charts and run each chart's test
         run: |
           if [ -n "${ENABLE_INSTALL_TEST}" ]; then
-            KIND_CONFIG_PATH="${GITHUB_WORKSPACE}/.github/scripts/kind-config.yaml"
+            KIND_CONFIG_PATH="${GITHUB_WORKSPACE}/misc/kind-config.yaml"
             if [ ! -f "$KIND_CONFIG_PATH" ]; then
               echo "Error: cannot found config. $KIND_CONFIG_PATH" >&2
               exit 1
