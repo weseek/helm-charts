@@ -97,7 +97,7 @@ main() {
   # Install `kind`
   curl -Lo ./kind https://github.com/kubernetes-sigs/kind/releases/download/v${kindver}/kind-$(uname)-amd64
   chmod +x kind
-  ./kind create cluster "${config}"
+  ./kind create cluster ${config}
 
   # Initialize helm with tiller
   kubectl create serviceaccount --namespace kube-system tiller
