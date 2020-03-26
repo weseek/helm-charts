@@ -19,7 +19,7 @@ jobs:
       
       - name: Install helm
         run: |
-          ${GITHUB_WORKSPACE}/.github/scripts/install-helm.sh --debug
+          ${GITHUB_WORKSPACE}/.github/scripts/install-helm.sh
 
       - name: Lint charts
         run: |
@@ -29,7 +29,7 @@ jobs:
       - name: Install charts and run each chart's test
         run: |
           if [ -n "${ENABLE_INSTALL_TEST}" ]; then
-            ${GITHUB_WORKSPACE}/.github/scripts/exec-helm-test.sh
+            ${GITHUB_WORKSPACE}/.github/scripts/exec-helm-test.sh --debug
           fi
 
   release:
@@ -47,7 +47,7 @@ jobs:
 
       - name: Install helm
         run: |
-          ${GITHUB_WORKSPACE}/.github/scripts/install-helm.sh --debug
+          ${GITHUB_WORKSPACE}/.github/scripts/install-helm.sh
 
       - name: Update helm repository that is published by GitHub Page
         run: |
