@@ -1,10 +1,9 @@
 name: Release Valid Charts
 
-# on:
-#   push:
-#     branches:
-#       - master
-on: [push]
+on:
+  push:
+    branches:
+      - master
 env:
   SRC_CHART_PATH_BASE: charts
   ENABLE_INSTALL_TEST: false
