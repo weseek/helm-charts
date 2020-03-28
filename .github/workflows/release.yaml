@@ -29,7 +29,7 @@ jobs:
       - name: Install charts and run each chart's test
         if: env.ENABLE_INSTALL_TEST == 'true'
         run: |
-          ${GITHUB_WORKSPACE}/misc/exec-helm-test.sh --config "${GITHUB_WORKSPACE}/misc/kind-config.yaml"
+          ${GITHUB_WORKSPACE}/misc/exec-helm-test.sh --config "${GITHUB_WORKSPACE}/misc/kind-config.yaml" --chartdir "${SRC_CHART_PATH_BASE}"
 
   release:
     runs-on: ubuntu-18.04
