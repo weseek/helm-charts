@@ -73,7 +73,7 @@ main() {
         ;;
       -f|--config)
         if [[ -n "${2:-}" ]]; then
-          config="--config $2"
+          config="$2"
           shift
         else
           echo "ERROR: '--config' cannot be empty." >&2
@@ -88,25 +88,40 @@ main() {
     shift
   done
 
+  [ -n "$config" ] && KIND_CONFIG_OPT="--config ${config}" || KIND_CONFIG_OPT=""
+  [ -n "$debug" ]  && KIND_VERBOSE_OPT="-v 10"             || KIND_VERBOSE_OPT=""
+  [ -n "$debug" ]  && KUBECTL_VERBOSE_OPT="-v 10"          || KUBECTL_VERBOSE_OPT=""
+  [ -n "$debug" ]  && HELM_DEBUG_OPT="--debug"             || HELM_DEBUG_OPT=""
+
   # --------------------------------------------------------------------------------
   # Create k8s cluster using `kind` to test installation ability
   # --------------------------------------------------------------------------------
 
-  pushd $(mktemp -d)
+  # Install `kind` if doesn't exist
+  KIND=$(which kind) || true
+  if [ -z "${KIND}" ]; then
+    echo "Installing kind..."
 
-  # Install `kind`
-  curl -Lo ./kind https://github.com/kubernetes-sigs/kind/releases/download/v${kindver}/kind-$(uname)-amd64
-  chmod +x kind
-  ./kind create cluster ${config}
+    TMP_KIND_DIR=$(mktemp -d)
+    trap "rm -rfv ${TMP_KIND_DIR}" EXIT
+
+    pushd ${TMP_KIND_DIR}
+    curl -Lo ./kind https://github.com/kubernetes-sigs/kind/releases/download/v${kindver}/kind-$(uname)-amd64
+    chmod +x kind
+    popd
+
+    KIND="${TMP_KIND_DIR}/kind"
+  fi
+
+  CLUSTER_NAME="exec-helm-test-$RANDOM"
+  ${KIND} create cluster --name ${CLUSTER_NAME} ${KIND_VERBOSE_OPT} ${KIND_CONFIG_OPT}
 
   # Initialize helm with tiller
-  kubectl create serviceaccount --namespace kube-system tiller
-  kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
-  helm init --wait --service-account tiller
-  kubectl patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"template":{"spec":{"serviceAccount":"tiller"}}}}'
-  helm version --server
-
-  popd
+  kubectl create serviceaccount --namespace kube-system tiller ${KUBECTL_VERBOSE_OPT}
+  kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller ${KUBECTL_VERBOSE_OPT}
+  helm init --wait --service-account tiller ${HELM_DEBUG_OPT}
+  kubectl patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"template":{"spec":{"serviceAccount":"tiller"}}}}' ${KUBECTL_VERBOSE_OPT}
+  helm version --server ${HELM_DEBUG_OPT}
 
   # --------------------------------------------------------------------------------
   # Install helm and run chart's test
@@ -114,14 +129,15 @@ main() {
 
   pushd "${chartdir}"
 
-  [ -n "$debug" ] && DEBUG_OPT="--debug" || DEBUG_OPT=""
   for CHART in $(ls -d *); do
-    helm install --timeout ${timeout} ${DEBUG_OPT} --dep-up --wait -n ${CHART} ${CHART}
-    helm test ${DEBUG_OPT} ${CHART}
-    helm delete ${DEBUG_OPT} --purge ${CHART}
+    helm install --dep-up --wait --timeout ${timeout} -n ${CHART} ${HELM_DEBUG_OPT} ${CHART}
+    helm test ${HELM_DEBUG_OPT} ${CHART}
+    helm delete --purge ${HELM_DEBUG_OPT} ${CHART}
   done
 
   popd
+
+  ${KIND} delete cluster --name ${CLUSTER_NAME}
 }
 
 main "$@"
