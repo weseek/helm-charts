@@ -7,7 +7,7 @@ name: Release Valid Charts
 on: [push]
 env:
   SRC_CHART_PATH_BASE: charts
-  ENABLE_INSTALL_TEST: ""
+  ENABLE_INSTALL_TEST: false
 
 jobs:
   lint_and_install:
@@ -27,9 +27,8 @@ jobs:
           helm lint "${SRC_CHART_PATH_BASE}"/*
 
       - name: Install charts and run each chart's test
+        if: env.ENABLE_INSTALL_TEST == 'true'
         run: |
-          if [ -z "${ENABLE_INSTALL_TEST}" ]; then exit 0; fi
-
           KIND_CONFIG_PATH="${GITHUB_WORKSPACE}/misc/kind-config.yaml"
           if [ ! -f "$KIND_CONFIG_PATH" ]; then
             echo "Error: cannot found config. $KIND_CONFIG_PATH" >&2
