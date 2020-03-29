@@ -14,12 +14,12 @@ Usage: $(basename "$0") [OPTION]...
 Install helm into tempolary k8s cluster and execute helm test.
 
 Mandatory arguments to long options are mandatory for short options too.
-  -h, --help               Display help
-      --debug              Display verbose output
-  -c, --chart=DIRPATH      Base path where charts are (default: "charts")
-      --kindver=VERSION    "kind" version (default: "0.7.0")
-  -t, --timeout=SECONDS    Timeout of "helm install" command (default: "600")
-  -f, --config=CONFPATH    Config file path
+  -h, --help                Display help
+      --debug               Display verbose output
+  -c, --chartdir=DIRPATH    Base path where charts are (default: "charts")
+      --kindver=VERSION     "kind" version (default: "0.7.0")
+  -t, --timeout=SECONDS     Timeout of "helm install" command (default: "600")
+  -f, --config=CONFPATH     Config file path
 EOF
 
   exit 1
