@@ -6,7 +6,7 @@
 # <Environments>
 # 
 #   SRC_CHARTS_PATH_BASE ... base path where charts are (default: "charts")
-#   GH_PAGES_BRANCH     ... branch name for GitHub Page. (default: "gh-pages")
+#   GH_PAGES_BRANCH      ... branch name for GitHub Page. (default: "gh-pages")
 # ================================================================================
 
 SRC_CHARTS_PATH_BASE=${SRC_CHARTS_PATH_BASE:-charts}
