@@ -17,6 +17,7 @@ if [ -f "${INSTALL_DIR}/helm" ]; then
   helm version --client
 fi
 
+# ref. https://helm.sh/docs/intro/install/#from-the-binary-releases
 pushd $(mktemp -d)
 curl -sSL https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz | tar xz
 sudo mv linux-amd64/helm "${INSTALL_DIR}"/helm

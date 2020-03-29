@@ -22,6 +22,7 @@ helm init --client-only
 helm package "${SRC_CHART_PATH_BASE}"/* --destination "${GH_PAGES_WORKTREE}" --dependency-update --save=false
 
 # Update helm repo index
+# (ref. https://github.com/helm/chart-releaser-action/blob/5ecd0f7f1ac8eb35a24baa68eaf39ed0f08325ac/cr.sh#L212-L234)
 pushd "${GH_PAGES_WORKTREE}"
 helm repo index .
 git add .

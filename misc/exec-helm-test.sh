@@ -28,6 +28,7 @@ EOF
 main() {
   # --------------------------------------------------------------------------------
   # Get parameters
+  # (ref. https://github.com/helm/chart-releaser-action/blob/5ecd0f7f1ac8eb35a24baa68eaf39ed0f08325ac/cr.sh)
   # --------------------------------------------------------------------------------
 
   local debug=
