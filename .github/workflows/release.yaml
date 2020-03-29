@@ -5,7 +5,7 @@ on:
     branches:
       - master
 env:
-  SRC_CHART_PATH_BASE: charts
+  SRC_CHARTS_PATH_BASE: charts
   ENABLE_INSTALL_TEST: false
 
 jobs:
@@ -23,12 +23,12 @@ jobs:
       - name: Lint charts
         run: |
           helm init --client-only
-          helm lint "${SRC_CHART_PATH_BASE}"/*
+          helm lint "${SRC_CHARTS_PATH_BASE}"/*
 
       - name: Install charts and run each chart's test
         if: env.ENABLE_INSTALL_TEST == 'true'
         run: |
-          ${GITHUB_WORKSPACE}/misc/exec-helm-test.sh --config "${GITHUB_WORKSPACE}/misc/kind-config.yaml" --chartdir "${SRC_CHART_PATH_BASE}"
+          ${GITHUB_WORKSPACE}/misc/exec-helm-test.sh --config "${GITHUB_WORKSPACE}/misc/kind-config.yaml" --chartdir "${SRC_CHARTS_PATH_BASE}"
 
   release:
     runs-on: ubuntu-18.04

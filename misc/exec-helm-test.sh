@@ -3,7 +3,7 @@
 # ================================================================================
 # Install helm into tempolary k8s cluster and execute helm test
 # 
-# <Prerequired>
+# <What you need to execute>
 # 
 #   `kubectl`, `helm` command
 # ================================================================================
@@ -95,10 +95,10 @@ main() {
   [ -n "$debug" ]  && HELM_DEBUG_OPT="--debug"             || HELM_DEBUG_OPT=""
 
   # --------------------------------------------------------------------------------
-  # Create k8s cluster using `kind` to test installation ability
+  # Create kind cluster and execute "helm test"
   # --------------------------------------------------------------------------------
 
-  # Install `kind` if doesn't exist
+  # Install `kind` if it doesn't exist
   KIND=$(which kind) || true
   if [ -z "${KIND}" ]; then
     echo "Installing kind..."

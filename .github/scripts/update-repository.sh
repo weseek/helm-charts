@@ -1,15 +1,15 @@
 #!/bin/bash -e
 
 # ================================================================================
-# Update helm repository that published by GitHub Page
+# Upgrade the helm repository on GitHub Pages
 # 
 # <Environments>
 # 
-#   SRC_CHART_PATH_BASE ... base path where charts are (default: "charts")
+#   SRC_CHARTS_PATH_BASE ... base path where charts are (default: "charts")
 #   GH_PAGES_BRANCH     ... branch name for GitHub Page. (default: "gh-pages")
 # ================================================================================
 
-SRC_CHART_PATH_BASE=${SRC_CHART_PATH_BASE:-charts}
+SRC_CHARTS_PATH_BASE=${SRC_CHARTS_PATH_BASE:-charts}
 GH_PAGES_BRANCH=${GH_PAGES_BRANCH:-gh-pages}
 
 # Initialize working directory
@@ -19,7 +19,7 @@ git worktree add "${GH_PAGES_WORKTREE}" ${GH_PAGES_BRANCH}
 
 # Create helm packages
 helm init --client-only
-helm package "${SRC_CHART_PATH_BASE}"/* --destination "${GH_PAGES_WORKTREE}" --dependency-update --save=false
+helm package "${SRC_CHARTS_PATH_BASE}"/* --destination "${GH_PAGES_WORKTREE}" --dependency-update --save=false
 
 # Update helm repo index
 # (ref. https://github.com/helm/chart-releaser-action/blob/5ecd0f7f1ac8eb35a24baa68eaf39ed0f08325ac/cr.sh#L212-L234)
