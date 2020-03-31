@@ -18,7 +18,6 @@ git fetch --no-tags --prune --depth=1 origin +refs/heads/*:refs/remotes/origin/*
 git worktree add "${GH_PAGES_WORKTREE}" ${GH_PAGES_BRANCH}
 
 # Create helm packages
-helm init --client-only
 helm package "${SRC_CHARTS_PATH_BASE}"/* --destination "${GH_PAGES_WORKTREE}" --dependency-update --save=false
 
 # Update helm repo index

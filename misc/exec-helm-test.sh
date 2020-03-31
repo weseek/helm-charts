@@ -117,13 +117,6 @@ main() {
   CLUSTER_NAME="exec-helm-test-$RANDOM"
   ${KIND} create cluster --name ${CLUSTER_NAME} ${KIND_VERBOSE_OPT} ${KIND_CONFIG_OPT}
 
-  # Initialize helm with tiller
-  kubectl create serviceaccount --namespace kube-system tiller ${KUBECTL_VERBOSE_OPT}
-  kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller ${KUBECTL_VERBOSE_OPT}
-  helm init --wait --service-account tiller ${HELM_DEBUG_OPT}
-  kubectl patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"template":{"spec":{"serviceAccount":"tiller"}}}}' ${KUBECTL_VERBOSE_OPT}
-  helm version --server ${HELM_DEBUG_OPT}
-
   # --------------------------------------------------------------------------------
   # Install helm and run chart's test
   # --------------------------------------------------------------------------------

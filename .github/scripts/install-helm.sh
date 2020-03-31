@@ -9,12 +9,12 @@
 # ================================================================================
 set -o pipefail
 
-HELM_VERSION="${HELM_VERSION:-2.16.3}"
+HELM_VERSION="${HELM_VERSION:-3.1.0}"
 
 INSTALL_DIR="/usr/local/bin"
 if [ -f "${INSTALL_DIR}/helm" ]; then
   echo "[DEBUG] helm is already installed."
-  helm version --client
+  helm version
 fi
 
 # ref. https://helm.sh/docs/intro/install/#from-the-binary-releases
@@ -24,4 +24,4 @@ sudo mv linux-amd64/helm "${INSTALL_DIR}"/helm
 rm -rf linux-amd64
 popd
 
-helm version --client
+helm version
