@@ -124,9 +124,9 @@ main() {
   pushd "${chartdir}"
 
   for CHART in $(ls -d *); do
-    helm install --dep-up --wait --timeout ${timeout} -n ${CHART} ${HELM_DEBUG_OPT} ${CHART}
+    helm install --dependency-update --wait --timeout ${timeout} ${HELM_DEBUG_OPT} ${CHART} ${CHART}
     helm test ${HELM_DEBUG_OPT} ${CHART}
-    helm delete --purge ${HELM_DEBUG_OPT} ${CHART}
+    helm uninstall ${HELM_DEBUG_OPT} ${CHART}
   done
 
   popd
