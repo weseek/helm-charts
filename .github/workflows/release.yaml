@@ -7,6 +7,7 @@ name: Release Valid Charts
 on: [push]
 env:
   SRC_CHARTS_PATH_BASE: charts
+  TIMEOUT_DURATION: 15m
   # ENABLE_INSTALL_TEST: false
   ENABLE_INSTALL_TEST: true
 
@@ -28,8 +29,11 @@ jobs:
 
       - name: Install charts and run each chart's test
         if: env.ENABLE_INSTALL_TEST == 'true'
-        run: |
-          ${GITHUB_WORKSPACE}/misc/exec-helm-test.sh --config "${GITHUB_WORKSPACE}/misc/kind-config.yaml" --chartdir "${SRC_CHARTS_PATH_BASE}"
+        run: >
+          ${GITHUB_WORKSPACE}/misc/exec-helm-test.sh
+          --config   "${GITHUB_WORKSPACE}/misc/kind-config.yaml"
+          --chartdir "${SRC_CHARTS_PATH_BASE}"
+          --timeout  "${TIMEOUT_DURATION}"
 
   release:
     runs-on: ubuntu-18.04

@@ -34,7 +34,7 @@ main() {
   local debug=
   local chartdir=charts
   local kindver=0.7.0
-  local timeout=10m0s
+  local timeout=5m0s
   local config=
 
   while :; do
