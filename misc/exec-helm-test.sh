@@ -18,7 +18,7 @@ Mandatory arguments to long options are mandatory for short options too.
       --debug               Display verbose output
   -c, --chartdir=DIRPATH    Base path where charts are (default: "charts")
       --kindver=VERSION     "kind" version (default: "0.7.0")
-  -t, --timeout=SECONDS     Timeout of "helm install" command (default: "600")
+  -t, --timeout=DURATION    Timeout of "helm install" command. Duration includes unit like 's'. (default: "5m0s")
   -f, --config=CONFPATH     Config file path
 EOF
 
@@ -34,7 +34,7 @@ main() {
   local debug=
   local chartdir=charts
   local kindver=0.7.0
-  local timeout=600
+  local timeout=5m0s
   local config=
 
   while :; do
