@@ -124,12 +124,13 @@ main() {
   pushd "${chartdir}"
 
   for CHART in $(ls -d *); do
-    # helm install 実行時に CHARTS を charts/growi のように指定すると requirements で指定した charts が読み込まれないため、ワークアラウンドで cd している
-    pushd "${CHART}" 
-    helm install --dependency-update --wait --timeout ${timeout} ${HELM_DEBUG_OPT} ${CHART} .
+    # helm install 実行時に --dependency-update を指定すると、requirements.yaml が読み込まれ
+    # 依存する helm charts が charts 配下に保存されるが、その後に依存する helm chart が作成されないため、
+    # ワークアラウンドとして事前に dependency を解決している
+    helm dependency update
+    helm install --wait --timeout ${timeout} ${HELM_DEBUG_OPT} ${CHART} ${CHART}
     helm test ${HELM_DEBUG_OPT} ${CHART}
     helm uninstall ${HELM_DEBUG_OPT} ${CHART}
-    popd
   done
 
   popd
