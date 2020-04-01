@@ -127,7 +127,7 @@ main() {
     # helm install 実行時に --dependency-update を指定すると、requirements.yaml が読み込まれ
     # 依存する helm charts が charts 配下に保存されるが、その後に依存する helm chart が作成されないため、
     # ワークアラウンドとして事前に dependency を解決している
-    helm dependency update
+    helm dependency update ${CHART}
     helm install --wait --timeout ${timeout} ${HELM_DEBUG_OPT} ${CHART} ${CHART}
     helm test ${HELM_DEBUG_OPT} ${CHART}
     helm uninstall ${HELM_DEBUG_OPT} ${CHART}
