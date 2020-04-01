@@ -124,9 +124,12 @@ main() {
   pushd "${chartdir}"
 
   for CHART in $(ls -d *); do
-    helm install --dependency-update --wait --timeout ${timeout} ${HELM_DEBUG_OPT} ${CHART} ${CHART}
+    # helm install 実行時に CHARTS を charts/growi のように指定すると requirements で指定した charts が読み込まれないため、ワークアラウンドで cd している
+    pushd "${CHART}" 
+    helm install --dependency-update --wait --timeout ${timeout} ${HELM_DEBUG_OPT} ${CHART} .
     helm test ${HELM_DEBUG_OPT} ${CHART}
     helm uninstall ${HELM_DEBUG_OPT} ${CHART}
+    popd
   done
 
   popd
