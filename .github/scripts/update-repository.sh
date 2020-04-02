@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 # ================================================================================
-# Upgrade the helm repository on GitHub Pages
+# Update the helm repository on GitHub Pages
 # 
 # <Environments>
 # 
