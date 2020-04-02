@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 # ================================================================================
-# Install helm into tempolary k8s cluster and execute helm test
+# Create kind cluster and execute "helm test"
 # 
 # <What you need to execute>
 # 
@@ -11,7 +11,7 @@
 show_help_with_exit() {
 cat << EOF
 Usage: $(basename "$0") [OPTION]...
-Install helm into tempolary k8s cluster and execute helm test.
+Create kind cluster and execute "helm test".
 
 Mandatory arguments to long options are mandatory for short options too.
   -h, --help                Display help
