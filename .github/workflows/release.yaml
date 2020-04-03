@@ -47,6 +47,6 @@ jobs:
         run: |
           ${GITHUB_WORKSPACE}/.github/scripts/install-helm.sh
 
-      - name: Update helm repository that is published by GitHub Page
+      - name: Update the helm repository on GitHub Pages
         run: |
           ${GITHUB_WORKSPACE}/.github/scripts/update-repository.sh
