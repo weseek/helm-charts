@@ -92,7 +92,7 @@ main() {
   [ -n "$config" ] && KIND_CONFIG_OPT="--config ${config}" || KIND_CONFIG_OPT=""
   [ -n "$debug" ]  && KIND_VERBOSE_OPT="-v 10"             || KIND_VERBOSE_OPT=""
   [ -n "$debug" ]  && KUBECTL_VERBOSE_OPT="-v 10"          || KUBECTL_VERBOSE_OPT=""
-  [ -n "$debug" ]  && HELM_DEBUG_OPT="--debug"             || HELM_DEBUG_OPT=""
+  [ -n "$debug" ]  && HELM_DEBUG_OPT="--debug -v 10"       || HELM_DEBUG_OPT=""
 
   # --------------------------------------------------------------------------------
   # Create kind cluster and execute "helm test"
