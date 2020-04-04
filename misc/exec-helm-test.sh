@@ -133,7 +133,7 @@ main() {
     kubectl get pod -o wide
     ES_IPADDR=$(kubectl get svc elasticsearch-master -o jsonpath={.spec.clusterIP})
     echo ${ES_IPADDR}
-    kubectl run --restart=Never -i --image=busybox --generator=run-pod/v1 busybox -- curl -k --debug http://${ES_IPADDR}:9200/growi
+    kubectl run --rm=true -i --image=yauritux/busybox-curl --generator=run-pod/v1 busybox -- curl -k --debug http://${ES_IPADDR}:9200/growi
     helm test ${HELM_DEBUG_OPT} ${CHART}
     helm uninstall ${HELM_DEBUG_OPT} ${CHART}
   done
