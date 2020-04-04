@@ -132,6 +132,7 @@ main() {
     helm status ${CHART}
     kubectl get pod -o wide
     kubectl get deployment -o wide
+    kubectl get statefulset -o wide
     kubectl get svc -o wide
     ES_IPADDR=$(kubectl get svc elasticsearch-master -o jsonpath={.spec.clusterIP})
     echo ${ES_IPADDR}
