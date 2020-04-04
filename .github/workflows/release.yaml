@@ -1,14 +1,12 @@
 name: Release Valid Charts
 
-# on:
-#   push:
-#     branches:
-#       - master
-on: [push]
+on:
+  push:
+    branches:
+      - master
 env:
   SRC_CHARTS_PATH_BASE: charts
-  # ENABLE_INSTALL_TEST: false
-  ENABLE_INSTALL_TEST: true
+  ENABLE_INSTALL_TEST: false
 
 jobs:
   lint_and_install:
@@ -52,6 +50,6 @@ jobs:
         run: |
           ${GITHUB_WORKSPACE}/.github/scripts/install-helm.sh
 
-      - name: Update helm repository that is published by GitHub Page
+      - name: Update the helm repository on GitHub Pages
         run: |
           ${GITHUB_WORKSPACE}/.github/scripts/update-repository.sh
