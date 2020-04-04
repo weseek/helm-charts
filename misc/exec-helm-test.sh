@@ -130,7 +130,10 @@ main() {
     helm dependency update ${CHART}
     helm install --wait --timeout ${timeout} ${HELM_DEBUG_OPT} ${CHART} ${CHART}
     helm status ${CHART}
-    kubectl get pod -o wide -w
+    kubectl get pod -o wide
+    ES_IPADDR=$(kubectl get svc elasticsearch-master -o jsonpath={.spec.clusterIP})
+    echo ${ES_IPADDR}
+    kubectl run --restart=Never -i --image=busybox --generator=run-pod/v1 busybox -- curl -k --debug http://${ES_IPADDR}:9200/growi
     helm test ${HELM_DEBUG_OPT} ${CHART}
     helm uninstall ${HELM_DEBUG_OPT} ${CHART}
   done
