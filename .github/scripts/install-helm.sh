@@ -5,7 +5,7 @@
 # 
 # <Environments>
 # 
-#   HELM_VERSION ... Helm version which will be installed. (default: "2.16.3")
+#   HELM_VERSION ... Helm version which will be installed. (default: "3.1.0")
 # ================================================================================
 set -o pipefail
 
