@@ -32,6 +32,7 @@ jobs:
           ${GITHUB_WORKSPACE}/misc/exec-helm-test.sh
           --config   "${GITHUB_WORKSPACE}/misc/kind-config.yaml"
           --chartdir "${SRC_CHARTS_PATH_BASE}"
+          --timeout 30m
           --debug
 
   release:
