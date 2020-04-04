@@ -129,6 +129,7 @@ main() {
     # (see. https://github.com/helm/helm/issues/7857)
     helm dependency update ${CHART}
     helm install --wait --timeout ${timeout} ${HELM_DEBUG_OPT} ${CHART} ${CHART}
+    sleep 60
     helm test ${HELM_DEBUG_OPT} ${CHART}
     helm uninstall ${HELM_DEBUG_OPT} ${CHART}
   done
