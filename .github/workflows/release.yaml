@@ -1,0 +1,52 @@
+name: Release Valid Charts
+
+on:
+  push:
+    branches:
+      - master
+env:
+  SRC_CHARTS_PATH_BASE: charts
+  ENABLE_INSTALL_TEST: false
+
+jobs:
+  lint_and_install:
+    runs-on: ubuntu-18.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      
+      - name: Install helm
+        run: |
+          ${GITHUB_WORKSPACE}/.github/scripts/install-helm.sh
+
+      - name: Lint charts
+        run: |
+          helm init --client-only
+          helm lint "${SRC_CHARTS_PATH_BASE}"/*
+
+      - name: Install charts and run each chart's test
+        if: env.ENABLE_INSTALL_TEST == 'true'
+        run: |
+          ${GITHUB_WORKSPACE}/misc/exec-helm-test.sh --config "${GITHUB_WORKSPACE}/misc/kind-config.yaml" --chartdir "${SRC_CHARTS_PATH_BASE}"
+
+  release:
+    runs-on: ubuntu-18.04
+    needs: lint_and_install
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Configure Git
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+
+      - name: Install helm
+        run: |
+          ${GITHUB_WORKSPACE}/.github/scripts/install-helm.sh
+
+      - name: Update the helm repository on GitHub Pages
+        run: |
+          ${GITHUB_WORKSPACE}/.github/scripts/update-repository.sh
