@@ -131,6 +131,8 @@ main() {
     helm install --wait --timeout ${timeout} ${HELM_DEBUG_OPT} ${CHART} ${CHART}
     helm status ${CHART}
     kubectl get pod -o wide
+    kubectl get deployment -o wide
+    kubectl get svc -o wide
     ES_IPADDR=$(kubectl get svc elasticsearch-master -o jsonpath={.spec.clusterIP})
     echo ${ES_IPADDR}
     kubectl run --rm=true -i --image=yauritux/busybox-curl --generator=run-pod/v1 busybox -- curl -k --debug http://${ES_IPADDR}:9200/growi
