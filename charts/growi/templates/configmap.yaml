@@ -17,6 +17,6 @@ data:
   {{- if ge (len .Values.ingress.hosts) 1 }}
   APP_SITE_URL: {{ printf "https://%s" (index .Values.ingress.hosts 0).host }}
   {{- end }}
-  {{- with .Values.extraEnv }}
-    {{- toYaml . | nindent 2 }}
+  {{- range .Values.extraEnv }}
+  {{ .name }}: {{ .value | quote }}
   {{- end }}
