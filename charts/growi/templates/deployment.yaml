@@ -8,7 +8,7 @@ spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "growi.labels" . | nindent 6 }}
+      {{- include "growi.matchLabels" . | nindent 6 }}
   {{- with .Values.strategy }}
   strategy:
     {{- . | toYaml | nindent 4 }}
