@@ -43,3 +43,11 @@ app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
+
+{{/*
+Labels to use on {deploy|sts}.spec.selector.matchLabels and svc.spec.selector
+*/}}
+{{- define "growi.matchLabels" -}}
+app.kubernetes.io/name: {{ include "growi.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end -}}
