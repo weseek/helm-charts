@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: weseek/growi
-  tag: 3.6.3
+  tag: 4.1.8
   pullPolicy: IfNotPresent
 
 service:
