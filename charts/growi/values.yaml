@@ -73,8 +73,11 @@ mongodb:
   enabled: true
   # url: mongodb://my-mongodb.chart-example.local:27017/my-wiki
   image:
-    tag: 3.6.16-r29
-  usePassword: false
+    tag: 3.6.20-debian-9-r33
+  auth:
+    enabled: false
+  pdb:
+    create: true
 
 elasticsearch:
   enabled: true
