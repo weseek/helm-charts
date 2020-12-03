@@ -2,7 +2,7 @@ apiVersion: v1
 appVersion: 3.6.3
 description: GROWI Helm chart for Kubernetes
 name: growi
-version: 0.1.1
+version: 0.1.2-RC
 home: https://growi.org
 icon: https://user-images.githubusercontent.com/1638767/38254268-d4476bbe-3793-11e8-964c-8865d690baff.png
 sources:
