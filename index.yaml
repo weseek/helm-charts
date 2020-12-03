@@ -3,7 +3,24 @@ entries:
   growi:
   - apiVersion: v1
     appVersion: 3.6.3
-    created: "2020-12-03T00:18:31.856919928Z"
+    created: "2020-12-03T00:20:29.619138849Z"
+    description: GROWI Helm chart for Kubernetes
+    digest: da381b8dccad141a2da2e695750ad4334a741631c6f7a3c2dbbc35d4fb8839c9
+    engine: gotpl
+    home: https://growi.org
+    icon: https://user-images.githubusercontent.com/1638767/38254268-d4476bbe-3793-11e8-964c-8865d690baff.png
+    maintainers:
+    - email: info@weseek.co.jp
+      name: WESEEK
+    name: growi
+    sources:
+    - https://github.com/weseek/growi
+    urls:
+    - growi-0.1.2-RC.tgz
+    version: 0.1.2-RC
+  - apiVersion: v1
+    appVersion: 3.6.3
+    created: "2020-12-03T00:20:29.613911981Z"
     description: GROWI Helm chart for Kubernetes
     digest: 09b9c442233fab9d2c5be06586fe6ce4cb85214424f9c85243e1390db1cf1e4d
     engine: gotpl
@@ -18,4 +35,4 @@ entries:
     urls:
     - growi-0.1.1.tgz
     version: 0.1.1
-generated: "2020-12-03T00:18:31.853408694Z"
+generated: "2020-12-03T00:20:29.609859029Z"
