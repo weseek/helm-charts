@@ -18,7 +18,7 @@ Mandatory arguments to long options are mandatory for short options too.
       --debug               Display verbose output
   -c, --chartdir=DIRPATH    Base path where charts are (default: "charts")
       --kindver=VERSION     "kind" version (default: "0.7.0")
-  -t, --timeout=SECONDS     Timeout of "helm install" command (default: "600")
+  -t, --timeout=DURATION    Timeout of "helm install" command. Duration includes unit like 's'. (default: "5m0s")
   -f, --config=CONFPATH     Config file path
 EOF
 
@@ -34,7 +34,7 @@ main() {
   local debug=
   local chartdir=charts
   local kindver=0.7.0
-  local timeout=600
+  local timeout=5m0s
   local config=
 
   while :; do
@@ -117,13 +117,6 @@ main() {
   CLUSTER_NAME="exec-helm-test-$RANDOM"
   ${KIND} create cluster --name ${CLUSTER_NAME} ${KIND_VERBOSE_OPT} ${KIND_CONFIG_OPT}
 
-  # Initialize helm with tiller
-  kubectl create serviceaccount --namespace kube-system tiller ${KUBECTL_VERBOSE_OPT}
-  kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller ${KUBECTL_VERBOSE_OPT}
-  helm init --wait --service-account tiller ${HELM_DEBUG_OPT}
-  kubectl patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"template":{"spec":{"serviceAccount":"tiller"}}}}' ${KUBECTL_VERBOSE_OPT}
-  helm version --server ${HELM_DEBUG_OPT}
-
   # --------------------------------------------------------------------------------
   # Install helm and run chart's test
   # --------------------------------------------------------------------------------
@@ -131,9 +124,21 @@ main() {
   pushd "${chartdir}"
 
   for CHART in $(ls -d *); do
-    helm install --dep-up --wait --timeout ${timeout} -n ${CHART} ${HELM_DEBUG_OPT} ${CHART}
+    # helm 3 ではローカルのチャートに対して install 実行時に --dependency-update を指定しても
+    # 依存するチャートがインストールされないため、ワークアラウンドとして事前に dependency を解決している
+    # (see. https://github.com/helm/helm/issues/7857)
+    helm dependency update ${CHART}
+    helm install --wait --timeout ${timeout} ${HELM_DEBUG_OPT} ${CHART} ${CHART}
+    helm status ${CHART}
+    kubectl get pod -o wide
+    kubectl get deployment -o wide
+    kubectl get statefulset -o wide
+    kubectl get svc -o wide
+    ES_IPADDR=$(kubectl get svc elasticsearch-master -o jsonpath={.spec.clusterIP})
+    echo ${ES_IPADDR}
+    kubectl run --rm=true -i --image=yauritux/busybox-curl --generator=run-pod/v1 busybox -- curl -k --debug http://${ES_IPADDR}:9200/growi
     helm test ${HELM_DEBUG_OPT} ${CHART}
-    helm delete --purge ${HELM_DEBUG_OPT} ${CHART}
+    helm uninstall ${HELM_DEBUG_OPT} ${CHART}
   done
 
   popd
