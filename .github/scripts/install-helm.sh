@@ -5,11 +5,11 @@
 # 
 # <Environments>
 # 
-#   HELM_VERSION ... Helm version which will be installed. (default: "2.16.3")
+#   HELM_VERSION ... Helm version which will be installed. (default: "3.5.4")
 # ================================================================================
 set -o pipefail
 
-HELM_VERSION="${HELM_VERSION:-2.16.3}"
+HELM_VERSION="${HELM_VERSION:-3.5.4}"
 
 INSTALL_DIR="/usr/local/bin"
 if [ -f "${INSTALL_DIR}/helm" ]; then
