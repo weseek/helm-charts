@@ -27,7 +27,6 @@ jobs:
 
       - name: Lint charts
         run: |
-          helm init --client-only
           helm lint "${SRC_CHARTS_PATH_BASE}"/*
 
       - name: Install charts and run each chart's test
