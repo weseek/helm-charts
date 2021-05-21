@@ -1,9 +1,9 @@
 name: Release Valid Charts
 
 on:
-  push:
-    branches:
-      - master
+  - push
+  - pull_request
+
 env:
   SRC_CHARTS_PATH_BASE: charts
   ENABLE_INSTALL_TEST: false
@@ -18,8 +18,8 @@ jobs:
 
       - name: Install dependent packages
         run: |
-          apt-get update
-          apt-get install -y curl sudo
+          sudo apt-get update
+          sudo apt-get install -y curl
       
       - name: Install helm
         run: |
@@ -34,9 +34,11 @@ jobs:
         run: |
           ${GITHUB_WORKSPACE}/misc/exec-helm-test.sh --config "${GITHUB_WORKSPACE}/misc/kind-config.yaml" --chartdir "${SRC_CHARTS_PATH_BASE}"
 
+  # This deploying job will be run only when master branch is updated
   release:
     runs-on: ubuntu-18.04
     needs: lint_and_install
+    if: github.ref == 'refs/heads/master'
 
     steps:
       - name: Checkout
