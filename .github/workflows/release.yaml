@@ -4,25 +4,27 @@ on:
   push:
     branches:
       - master
+  pull_request:
+
 env:
   SRC_CHARTS_PATH_BASE: charts
   ENABLE_INSTALL_TEST: false
 
 jobs:
   lint_and_install:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
-      
-      - name: Install helm
-        run: |
-          ${GITHUB_WORKSPACE}/.github/scripts/install-helm.sh
+        uses: actions/checkout@v3
+
+      - uses: azure/setup-helm@v3
+        with:
+          version: v3.10.3
+        id: install-helm
 
       - name: Lint charts
         run: |
-          helm init --client-only
           helm lint "${SRC_CHARTS_PATH_BASE}"/*
 
       - name: Install charts and run each chart's test
@@ -30,22 +32,25 @@ jobs:
         run: |
           ${GITHUB_WORKSPACE}/misc/exec-helm-test.sh --config "${GITHUB_WORKSPACE}/misc/kind-config.yaml" --chartdir "${SRC_CHARTS_PATH_BASE}"
 
+  # This deploying job will be run only when master branch is updated
   release:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     needs: lint_and_install
+    if: github.ref == 'refs/heads/master'
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      - name: Configure Git
+      - name: Configure Git for releasing
         run: |
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
-      - name: Install helm
-        run: |
-          ${GITHUB_WORKSPACE}/.github/scripts/install-helm.sh
+      - uses: azure/setup-helm@v3
+        with:
+          version: v3.10.3
+        id: install-helm
 
       - name: Update the helm repository on GitHub Pages
         run: |
