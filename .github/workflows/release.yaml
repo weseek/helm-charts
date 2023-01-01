@@ -1,8 +1,10 @@
 name: Release Valid Charts
 
 on:
-  - push
-  - pull_request
+  push:
+    branches:
+      - master
+  pull_request:
 
 env:
   SRC_CHARTS_PATH_BASE: charts
