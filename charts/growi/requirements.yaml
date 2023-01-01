@@ -1,7 +1,8 @@
 dependencies:
 - name: mongodb
   version: 9.2.2
-  repository: https://charts.bitnami.com/bitnami
+  # TODO: change to the location of current helm charts
+  repository: https://raw.githubusercontent.com/bitnami/charts/pre-2022/bitnami
   condition: mongodb.enabled
 - name: elasticsearch
   version: 7.9.2
