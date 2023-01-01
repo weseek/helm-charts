@@ -3,10 +3,18 @@ entries:
   growi:
   - apiVersion: v1
     appVersion: 4.2.2
-    created: "2020-12-03T02:20:09.128525535Z"
+    created: "2023-01-01T16:54:40.154959921Z"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://raw.githubusercontent.com/bitnami/charts/pre-2022/bitnami
+      version: 9.2.2
+    - condition: elasticsearch.enabled
+      name: elasticsearch
+      repository: https://helm.elastic.co/
+      version: 7.9.2
     description: GROWI Helm chart for Kubernetes
-    digest: 8dae5d14057c4d4f74a9e20a3977ebdf9110f2da70548046f61fb3b28f3e5133
-    engine: gotpl
+    digest: db8d865ae07f130808537ad028bf5025d88b1345ff3f15bea95205808f04c066
     home: https://growi.org
     icon: https://user-images.githubusercontent.com/1638767/38254268-d4476bbe-3793-11e8-964c-8865d690baff.png
     maintainers:
@@ -20,10 +28,18 @@ entries:
     version: 0.1.2-RC
   - apiVersion: v1
     appVersion: 3.6.3
-    created: "2020-12-03T02:20:09.122851444Z"
+    created: "2023-01-01T16:54:40.149514342Z"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 7.6.2
+    - condition: elasticsearch.enabled
+      name: elasticsearch
+      repository: https://helm.elastic.co/
+      version: 7.5.1
     description: GROWI Helm chart for Kubernetes
     digest: 09b9c442233fab9d2c5be06586fe6ce4cb85214424f9c85243e1390db1cf1e4d
-    engine: gotpl
     home: https://growi.org
     icon: https://user-images.githubusercontent.com/1638767/38254268-d4476bbe-3793-11e8-964c-8865d690baff.png
     maintainers:
@@ -35,4 +51,4 @@ entries:
     urls:
     - growi-0.1.1.tgz
     version: 0.1.1
-generated: "2020-12-03T02:20:09.119769549Z"
+generated: "2023-01-01T16:54:40.145837888Z"
