@@ -16,14 +16,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Install dependent packages
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y curl
-      
-      - name: Install helm
-        run: |
-          ${GITHUB_WORKSPACE}/.github/scripts/install-helm.sh
+      - uses: azure/setup-helm@v3
+        with:
+          version: v3.10.3
+        id: install-helm
 
       - name: Lint charts
         run: |
@@ -44,14 +40,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Configure Git
+      - name: Configure Git for releasing
         run: |
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
-      - name: Install helm
-        run: |
-          ${GITHUB_WORKSPACE}/.github/scripts/install-helm.sh
+      - uses: azure/setup-helm@v3
+        with:
+          version: v3.10.3
+        id: install-helm
 
       - name: Update the helm repository on GitHub Pages
         run: |
