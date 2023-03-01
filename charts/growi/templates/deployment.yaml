@@ -53,7 +53,7 @@ spec:
         {{- if eq .Values.fileUpload.type "local" }}
           volumeMounts:
           - name: uploads
-            mountPath: "/opt/growi/public/uploads"
+            mountPath: "/data/uploads"
         {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
