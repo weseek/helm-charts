@@ -3,7 +3,32 @@ entries:
   growi:
   - apiVersion: v1
     appVersion: 4.2.2
-    created: "2023-03-05T23:58:56.23803131Z"
+    created: "2023-03-06T00:03:02.772465313Z"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://raw.githubusercontent.com/bitnami/charts/pre-2022/bitnami
+      version: 9.2.2
+    - condition: elasticsearch.enabled
+      name: elasticsearch
+      repository: https://helm.elastic.co/
+      version: 7.9.2
+    description: GROWI Helm chart for Kubernetes
+    digest: 560516fb6d07a2202a80dbb0e7c717352c994150ff6f1dfb4363b5cd0cfa6d48
+    home: https://growi.org
+    icon: https://user-images.githubusercontent.com/1638767/38254268-d4476bbe-3793-11e8-964c-8865d690baff.png
+    maintainers:
+    - email: info@weseek.co.jp
+      name: WESEEK
+    name: growi
+    sources:
+    - https://github.com/weseek/growi
+    urls:
+    - growi-0.1.2.tgz
+    version: 0.1.2
+  - apiVersion: v1
+    appVersion: 4.2.2
+    created: "2023-03-06T00:03:02.767094995Z"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -28,7 +53,7 @@ entries:
     version: 0.1.2-RC
   - apiVersion: v1
     appVersion: 3.6.3
-    created: "2023-03-05T23:58:56.233058079Z"
+    created: "2023-03-06T00:03:02.75973887Z"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -51,4 +76,4 @@ entries:
     urls:
     - growi-0.1.1.tgz
     version: 0.1.1
-generated: "2023-03-05T23:58:56.22846535Z"
+generated: "2023-03-06T00:03:02.755666156Z"
