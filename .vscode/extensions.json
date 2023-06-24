@@ -1,0 +1,11 @@
+{
+  "recommendations": [
+    "redhat.vscode-yaml",
+    "ms-kubernetes-tools.vscode-kubernetes-tools",
+    "tim-koehler.helm-intellisense",
+    "fnando.linter",
+    "streetsidesoftware.code-spell-checker",
+    "oderwat.indent-rainbow",
+    "github.vscode-pull-request-github"
+  ]
+}
