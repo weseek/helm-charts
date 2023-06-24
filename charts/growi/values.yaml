@@ -32,7 +32,7 @@ fileUpload:
   local:
     annotations: {}
     accessModes:
-    - ReadWriteOnce
+      - ReadWriteOnce
     # size: 5Gi
     # storageClass: default
 
