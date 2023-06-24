@@ -5,6 +5,7 @@
     "tim-koehler.helm-intellisense",
     "fnando.linter",
     "streetsidesoftware.code-spell-checker",
-    "oderwat.indent-rainbow"
+    "oderwat.indent-rainbow",
+    "github.vscode-pull-request-github"
   ]
 }
