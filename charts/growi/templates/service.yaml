@@ -12,4 +12,4 @@ spec:
       protocol: TCP
       name: http
   selector:
-    {{- include "growi.matchLabels" . | nindent 4 }}
+    {{- include "growi.selectorLabels" . | nindent 4 }}
